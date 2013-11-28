@@ -1,0 +1,241 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Manual de Instalação do I3geo by admin-softwarepublicobrasileiro</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>Manual de Instalação do I3geo</h1>
+        <p></p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/admin-softwarepublicobrasileiro/i3geo" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/admin-softwarepublicobrasileiro/i3geo/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/admin-softwarepublicobrasileiro/i3geo/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h2>
+<a name="1tutorial-de-instala%C3%A7%C3%A3o-e-configura%C3%A7%C3%A3o" class="anchor" href="#1tutorial-de-instala%C3%A7%C3%A3o-e-configura%C3%A7%C3%A3o"><span class="octicon octicon-link"></span></a>1.Tutorial de instalação e configuração</h2>
+
+<p>Este tutorial tem como finalidade demonstrar a instalação e configuração do i3geo na distribuição Linux Ubuntu 9.10 e 10.04. Para instalar e configurar o i3geo, copie a pasta I3geo ( <a href="http://mapas.mma.gov.br/download">http://mapas.mma.gov.br/download</a> ou do SVN do Portal) para o diretório do apache (padrão do Ubuntu <i>/var/www/</i>) e configure os endereços da aplicação conforme instruções dos subitens deste tutorial.</p>
+
+<h2>
+<a name="2configurando-o-arquivo-ms_configuraphp" class="anchor" href="#2configurando-o-arquivo-ms_configuraphp"><span class="octicon octicon-link"></span></a>2.Configurando o arquivo ms_configura.php</h2>
+
+<p>Abra o arquivo <i>/i3geo/ms_configura.php</i> em um editor para configurar as variáveis que guardam os caminhos da aplicação conforme segue abaixo:</p>
+
+<ul>
+<li>
+<p>Variável <b>$mensagemInicia</b>: esta variável é responsável pela mensagem inicial do I3Geo, você pode colocar uma mensagem personalizada alterando seu texto conforme exemplo:</p>
+
+<pre><code>$mensagemInicia = “minha aplicação” ;
+</code></pre>
+</li>
+<li>
+<p>Variável <b>$tituloInstituicao</b>: esta variável é responsável pelo título que aparecerá na barra de título dos navegadores.</p>
+
+<pre><code>$tituloInstituicao = "Meu Título";
+</code></pre>
+</li>
+</ul><p><b>Nota:</b> Se for criar mais de uma aplicação usando o i3geo, comente a variável <b>$tituloInstituicao</b> e coloque o título da aplicação na tag title do html.</p>
+
+<p>O primeiro bloco de código diz respeito a instalação no windows e o segundo é responsável pela configuração no Linux. É este último bloco de código que iremos alterar conforme indica os procedimentos abaixo:</p>
+
+<ul>
+<li>
+<p>Variável <b>$editores</b>: responsável por controlar quais usuários poderão utilizar o aplicativo de administração do i3geo a partir dos IPs das máquinas destes. Desta forma, esta variável deve ser preenchida conforme exemplo abaixo:</p>
+
+<pre><code>$editores = array("10.0.0.2",”192.23.255.255”);
+</code></pre>
+</li>
+</ul><p><b>Obs:</b> No exemplo acima somente as máquinas 10.0.0.2 e 192.23.255.255 terão permissão para editar os temas do i3geo.</p>
+
+<ul>
+<li>
+<p>Variável <b>$dir_tmp</b>: responsável por guardar o caminho absoluto do diretório temporário onde serão gravadas as imagens geradas pelo mapserver.</p>
+
+<pre><code>$dir_tmp = "/tmp/";
+</code></pre>
+</li>
+</ul><p><b>Obs:</b> Recomenda-se utilizar o diretório <i>/tmp</i> do Ubuntu, pois este é apagado regularmente pelo próprio sistema operacional, poupando o trabalho do usuário em ter de esvaziar este diretório de tempos em tempos, porém pode-se estabelecer qualquer diretório como sendo o <b>$dir_tmp</b>.</p>
+
+<p><b>Obs:</b> Certifique-se que este diretório esteja visível pelo <b>Apache2</b> e que este tenha permissão de escrita no diretório.</p>
+
+<p><b>Obs:</b> Recomenda-se a criação de um link simbólico na pasta <i>/var/www/</i> direcionado para diretório temporário. Para criar um link simbólico digite o seguinte comando no terminal do Ubuntu:</p>
+
+<pre><code>/var/www:~$ sudo ln - s /tmp/ mp ms_tmp
+</code></pre>
+
+<p><b>Nota:</b> com o comando acima criaremos um link simbólico chamado <i>ms_tmp</i> que remete-se ao diretório <i>/tmp</i> do Ubuntu.</p>
+
+<ul>
+<li>
+<p>Variável <b>$temasdir</b>: responsável por guardar o caminho absoluto da pasta onde ficam os arquivos mapfiles das camadas que serão visualizadas no i3geo.</p>
+
+<pre><code>$temasdir = "/var/www/i3geo/temas";
+</code></pre>
+</li>
+<li>
+<p>Variável <b>$temasaplic</b>: responsável por guardar o caminho absoluto da pasta onde ficam os arquivos html das interfaces do i3geo e onde estão os mapfiles de inicialização do aplicativo.</p>
+
+<pre><code>$temasaplic = "/var/www/i3geo/aplicmap";
+</code></pre>
+</li>
+<li>
+<p>Variável <b>$locmapserv</b>: indica ao apache o caminho relativo do mapserver cgi.</p>
+
+<pre><code>$locmapserv = "/cgi-bin/mapserv";
+</code></pre>
+</li>
+</ul><p><b>Obs:</b> o mapserver cgi no Ubuntu fica no diretório <i>/usr/lib/cgi-bin/mapserv</i>, crie um link simbólico apontando para este diretório, conforme exemplo abaixo: </p>
+
+<pre><code>/var/www/:~$ sudo ln -s /usr/lib/cgi-bin/mapserv cgi-bin
+</code></pre>
+
+<ul>
+<li>
+<p>Variável <b>$locaplic</b>: esta variável é responsável por guardar o caminho absoluto da pasta raiz do i3geo.</p>
+
+<pre><code>$locaplic = "/var/www/i3geo";
+</code></pre>
+</li>
+<li>
+<p>Variável <b>$R_path</b>: esta variável indica o path do pacote estatístico R, para que o i3geo possa acioná-lo a partir de suas ferramentas de gráficos e análise espacial</p>
+
+<pre><code>$R_path = "R";
+</code></pre>
+</li>
+</ul><p><b>Obs:</b> se você não instalou o R, deixe essa variável vazia.</p>
+
+<p>A partir da versão 4.1 do i3geo, os temas (variável <b>$menutemas</b>), os sistemas (variável <b>$locsistemas</b>), os sistemas que aparecem na ferramenta identifica (variável <b>$locidentifica</b>), os mapas da guia Links (<b>$locmapas</b>) e os atlas (variável <b>$mapasxml</b>) deixaram de ser configuradas por um arquivo <i>xml</i> e passaram a integrar o banco de dados sqlite do sistema de administração, desta forma, estas variáveis devem ficar vazias, conforme demonstrado abaixo:</p>
+
+<pre><code>$locsistemas= "";
+$locidentifica = "";
+$locmapas = "";
+$menutemas = "";
+$atlasxml = "";
+</code></pre>
+
+<ul>
+<li><p>Variáveis <b>$postgis_con</b> e <b>$srid_area</b>: foram depreciadas e não são mais necessárias a partir da versão 5.x do MapServer.</p></li>
+<li><p>Variável <b>$utilizacgi</b>: recebe os valores “sim” ou “não”, em caso afirmativo o i3geo utilizará o cgi do mapserver para gerar os mapas tornando a aplicação mais rápida, em caso negativo as imagens serão geradas pelo php.</p></li>
+<li>
+<p>Variável <b>$postgis_mapa</b>: tem a função de esconder a string de conexão com o banco de dados no mapfile. Ao optar por esta funcionalidade do i3geo especifique a sua conexão com o banco na variável, conforme exemplo abaixo. Se você não for usar esta opção deixe a variável em branco.</p>
+
+<pre><code>$postgis_mapa = array("exemplo"=&gt;"user=postgres password=postgres
+dbname=pgutf8 host=localhost port=5432 options='-c client_encoding=LATIN1'");
+</code></pre>
+</li>
+</ul><p><b>Obs:</b> Optando por esta funcionalidade o mapa será forçado a recusar o modo de operação CGI.</p>
+
+<ul>
+<li>
+<p>Variável <b>$expoeMapfile</b>: recebe os valores “sim” e “não”, e controla se o nome do mapfile atual será ou não retornado para a aplicação via ajax. Quando essa variável for definida como "nao" algumas das funcionalidades do i3geo poderão ficar prejudicadas, mas sem comprometimento das funções principais.</p>
+
+<pre><code>$expoeMapfile = "sim";
+</code></pre>
+</li>
+<li><p>Variável <b>$conexaoadmin</b>: define a string de conexão com o banco de dados administrativo, originalmente montado no banco de dados sqlite. Para usar o banco default do i3geo deixe esta variável em branco, caso queira utilizar a ferramenta de administração em outro banco de dados determine a string de conexão com o outro banco nesta variável.</p></li>
+<li>
+<p>Variável <b>$interfacePadrao</b>: define o arquivo htm, html ou phtml que será usado pelo i3geo para visualização dos mapas. Este aquivo deve estar armazenado na pasta <i>i3geo/aplicmapa</i>.</p>
+
+<pre><code>$interfacePadrao = "geral.htm";
+</code></pre>
+</li>
+</ul><h2>
+<a name="3-configurando-o-arquivo-geral1map" class="anchor" href="#3-configurando-o-arquivo-geral1map"><span class="octicon octicon-link"></span></a>3. Configurando o arquivo geral1.map</h2>
+
+<p>Abra o arquivo <i>/i3geo/aplicmap/geral1.map</i> em um editor e configure os caminhos no mapfile conforme demonstrado abaixo: </p>
+
+<ul>
+<li>
+<p>Tag <b>FONTSET</b>: fornece para o mapserver o caminho para o diretório onde está o arquivo de fontes que será utilizado pelo i3geo.</p>
+
+<pre><code>FONTSET "/var/www/i3geo/symbols/fontes.txt"
+</code></pre>
+</li>
+<li>
+<p>Tag <b>SYMBOLSET</b>: fornece para o mapserver o caminho para o diretório onde está o arquivo de símbolos que será utilizado pelo i3geo.</p>
+
+<pre><code>SYMBOLSET "/var/www/i3geo/symbols/simbolos.sym"
+</code></pre>
+</li>
+<li>
+<p>Tag <b>SHAPEPATH</b>: fornece para o mapserver o caminho para o diretório onde ficarão armazenados os arquivos cartográficos (shapefiles) que serão utilizados pelo i3geo.</p>
+
+<pre><code>SHAPEPATH "/var/www/geodados"
+</code></pre>
+</li>
+<li>
+<p>Tag <b>IMAGE</b>: fornece para o mapserver o caminho para o diretório onde está a figura usada como mapa de referência.</p>
+
+<pre><code>IMAGE "/var/www/i3geo/imagens/referencia1.png"
+</code></pre>
+</li>
+<li>
+<p>Tag <b>IMAGEPATH</b>: fornece para o mapserver o caminho para o diretório onde serão armazenados as imagens geradas pelo i3geo.</p>
+
+<pre><code>IMAGEPATH "/tmp/"
+</code></pre>
+</li>
+<li>
+<p>Tag <b>IMAGEURL</b>: fornece para o mapserver o caminho relativo para o diretórion temporário. Recomenda-se que a IMAGEURL seja um link simbólico para a IMAGEPATH.</p>
+
+<pre><code>IMAGEURL "/ms_tmp/"
+</code></pre>
+</li>
+<li>
+<p>Tag vTEMPLATE: fornece para o mapserver o caminho para o diretório onde está o arquivo da interface do i3geo (template).</p>
+
+<pre><code>TEMPLATE "/var/www/i3geo/aplicmap/geral.htm"
+</code></pre>
+</li>
+</ul><p>Configure a Tag <b>DATA<b> de todas as <b>LAYERS<b> do arquivo <i>geral1.map</i> e também do arquivo <i>estadosl.map</i> que se encontra na mesma pasta, conforme o exemplo abaixo:</b></b></b></b></p>
+
+<pre><code>LAYER
+DATA "/var/www/i3geo/aplicmap/dados/zee"
+</code></pre>
+
+<h2>
+<a name="4teste-de-instala%C3%A7%C3%A3o" class="anchor" href="#4teste-de-instala%C3%A7%C3%A3o"><span class="octicon octicon-link"></span></a>4.Teste de instalação</h2>
+
+<p>Para ter certeza se a instalação está correta vá para o navegador de internet e na barra de endereços digite <b>http:///i3geo/testainstal.php</b>.</p>
+
+<p>Este programa fará a verificação se todos os pacotes necessários para o funcionamento do i3geo foram instalados e se os caminhos definidos no <i><b>ms_configura.php</b></i> estão corretos. Além destas verificações listadas acima, o programa <i><b>testainstal.php</b></i> verifica se o apache consegue escrever na pasta temporária e testa os mapfiles <i><b>geral1.map</b></i> e <i><b>estadosl.map</b></i>.</p>
+
+<p><b>Atenção:</b> Se ao final da listagem de verificação aparecer dois mapas do Brasil na América do Sul, um sem os limites estaduais e outro com os limites, sua instalação está correta e você pode começar a usar o i3geo. Caso estes mapas não apareçam verifique as mensagens de erro e tente corrigi-las para utilizar o i3geo.</p>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/admin-softwarepublicobrasileiro">admin-softwarepublicobrasileiro</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
